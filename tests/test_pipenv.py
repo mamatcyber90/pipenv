@@ -1,4 +1,5 @@
 import os
+import shutil
 
 from mock import patch, Mock, PropertyMock
 
