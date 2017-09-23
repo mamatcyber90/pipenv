@@ -110,6 +110,14 @@ class TestPipenv:
         with PipenvInstance() as p:
             assert p.pipenv('--help').out
 
+    def test_dry_run_and_update(self):
+        with PipenvInstance() as p:
+            c = p.pipenv('install pytest --dev')
+            d = p.pipenv('update --dev --dry-run')
+
+            assert c.return_code == 0 and d.return_code == 0
+            assert c.out and d.out
+
     def test_basic_setup(self):
         with PipenvInstance(pipfile=False) as p:
             c = p.pipenv('install requests')
@@ -170,6 +178,29 @@ class TestPipenv:
             assert 'certifi' in p.lockfile['default']
 
             c = p.pipenv('uninstall requests')
+            assert c.return_code == 0
+            assert 'requests' not in p.pipfile['packages']
+            assert 'requests' not in p.lockfile['default']
+            assert 'chardet' not in p.lockfile['default']
+            assert 'idna' not in p.lockfile['default']
+            assert 'urllib3' not in p.lockfile['default']
+            assert 'certifi' not in p.lockfile['default']
+
+            c = p.pipenv('run python -m requests.help')
+            assert c.return_code > 0
+
+    def test_uninstall_dev(self):
+        with PipenvInstance() as p:
+            c = p.pipenv('install requests --dev')
+            assert c.return_code == 0
+            assert 'requests' in p.pipfile['dev-packages']
+            assert 'requests' in p.lockfile['develop']
+            assert 'chardet' in p.lockfile['develop']
+            assert 'idna' in p.lockfile['develop']
+            assert 'urllib3' in p.lockfile['develop']
+            assert 'certifi' in p.lockfile['develop']
+
+            c = p.pipenv('uninstall --dev')
             assert c.return_code == 0
             assert 'requests' not in p.pipfile['dev-packages']
             assert 'requests' not in p.lockfile['develop']
@@ -352,5 +383,3 @@ requests = {version = "*"}
             c = p.pipenv('run python -c "import os; print(os.environ[\'HELLO\'])"')
             assert c.return_code == 0
             assert 'WORLD' in c.out
-
-
