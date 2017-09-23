@@ -117,38 +117,42 @@ class TestPipenv():
         assert 'six = "==1.10.0"' not in pipfile_output
 
         os.chdir('..')
-        shutil.rmtree('test_requirements_to_pip')
+        try:
+            shutil.rmtree('test_requirements_to_pip')
+        except PermissionError:
+            print('Couldn\'t remove files')
+        
         del os.environ['PIPENV_MAX_DEPTH']
 
-    # def test_timeout_long(self):
-    #     delegator.run('mkdir test_timeout_long')
-    #     os.chdir('test_timeout_long')
+    def test_timeout_long(self):
+        delegator.run('mkdir test_timeout_long')
+        os.chdir('test_timeout_long')
 
-    #     os.environ['PIPENV_VENV_IN_PROJECT'] = '1'
-    #     os.environ['PIPENV_TIMEOUT'] = '60'
+        os.environ['PIPENV_VENV_IN_PROJECT'] = '1'
+        os.environ['PIPENV_TIMEOUT'] = '60'
 
-    #     assert delegator.run('touch Pipfile').return_code == 0
+        assert create_empty_pipfile() == 0
 
-    #     assert delegator.run('pipenv --python python').return_code == 0
+        assert delegator.run('pipenv --python python').return_code == 0
 
-    #     os.chdir('..')
-    #     delegator.run('rm -fr test_timeout_long')
-    #     del os.environ['PIPENV_TIMEOUT']
+        os.chdir('..')
+        shutil.rmtree('test_timeout_long')
+        del os.environ['PIPENV_TIMEOUT']
 
-    # def test_timeout_short(self):
-    #     delegator.run('mkdir test_timeout_short')
-    #     os.chdir('test_timeout_short')
+    def test_timeout_short(self):
+        delegator.run('mkdir test_timeout_short')
+        os.chdir('test_timeout_short')
 
-    #     os.environ['PIPENV_VENV_IN_PROJECT'] = '1'
-    #     os.environ['PIPENV_TIMEOUT'] = '1'
+        os.environ['PIPENV_VENV_IN_PROJECT'] = '1'
+        os.environ['PIPENV_TIMEOUT'] = '1'
 
-    #     assert delegator.run('touch Pipfile').return_code == 0
+        assert create_empty_pipfile() == 0
 
-    #     assert delegator.run('pipenv --python python').return_code == 1
+        assert delegator.run('pipenv --python python').return_code == 1
 
-    #     os.chdir('..')
-    #     delegator.run('rm -fr test_timeout_short')
-    #     del os.environ['PIPENV_TIMEOUT']
+        os.chdir('..')
+        shutil.rmtree('test_timeout_short')
+        del os.environ['PIPENV_TIMEOUT']
 
     # def test_pipenv_uninstall(self):
     #     delegator.run('mkdir test_pipenv_uninstall')
