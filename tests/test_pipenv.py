@@ -361,6 +361,26 @@ requests = {version = "*"}
             c = p.pipenv('run python -c "import requests; import idna; import certifi;"')
             assert c.return_code == 0
 
+    def test_requirements_to_pipfile(self):
+
+        with PipenvInstance(pipfile=False) as p:
+            with open('requirements.txt', 'w') as f:
+                f.write('requests[socks]==2.18.1\n')
+            c = p.pipenv('install')
+            assert c.return_code == 0
+
+            assert 'requests' in p.pipfile['packages']
+            assert 'socks' in p.pipfile['packages']['requests']['extras']
+            assert 'requests' in p.lockfile['default']
+            assert 'idna' in p.lockfile['default']
+            assert 'urllib3' in p.lockfile['default']
+            assert 'certifi' in p.lockfile['default']
+            assert 'chardet' in p.lockfile['default']
+            assert 'pysocks' in p.lockfile['default']
+
+            c = p.pipenv('run python -c "import requests; import idna; import certifi; import socks;"')
+            assert c.return_code == 0
+
     def test_bad_packages(self):
         with PipenvInstance() as p:
             c = p.pipenv('install NotAPackage')
