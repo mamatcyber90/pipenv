@@ -285,24 +285,24 @@ class TestPipenv():
         assert 'pytest' in p['dev-packages']
         assert changed is False
 
-    # @pytest.mark.parametrize('shell, extension', [
-    #     ('/bin/bash', ''),
-    #     ('/bin/fish', '.fish'),
-    #     ('/bin/csh', '.csh'),
-    #     ('/bin/unknown', '')]
-    # )
-    # def test_activate_virtualenv(self, shell, extension):
-    #     orig_shell = os.environ['SHELL']
-    #     os.environ['SHELL'] = shell
+    @pytest.mark.parametrize('shell, extension', [
+        ('/bin/bash', ''),
+        ('/bin/fish', '.fish'),
+        ('/bin/csh', '.csh'),
+        ('/bin/unknown', '')]
+    )
+    def test_activate_virtualenv(self, shell, extension):
+        orig_shell = os.environ['SHELL']
+        os.environ['SHELL'] = shell
 
-    #     # Get standard activation command for bash
-    #     command = activate_virtualenv()
+        # Get standard activation command for bash
+        command = activate_virtualenv()
 
-    #     # Return environment to initial shell config.
-    #     os.environ['SHELL'] = orig_shell
+        # Return environment to initial shell config.
+        os.environ['SHELL'] = orig_shell
 
-    #     venv = Project().virtualenv_location
-    #     assert command == 'source {0}/bin/activate{1}'.format(venv, extension)
+        venv = Project().virtualenv_location
+        assert command == 'source {0}/bin/activate{1}'.format(venv, extension)
 
     # def test_activate_virtualenv_no_source(self):
     #     command = activate_virtualenv(source=False)
