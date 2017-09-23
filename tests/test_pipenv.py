@@ -15,6 +15,8 @@ from pipenv.project import Project
 # Tell pipenv to ignore activated virtualenvs.
 os.environ['PIPENV_IGNORE_VIRTUALENVS'] = 'True'
 
+FULL_PYTHON_PATH = 'C:\\Python36-x64\\python.exe'
+
 # Helper functions
 def create_empty_pipfile():
     if os.name == 'nt':
