@@ -6,7 +6,8 @@ python:
   - "3.6"
   # - "3.7-dev"
    - "pypy"
-   - "pypy3" # TODO: pkg_config issues
+  # TODO: pkg_config issues
+   - "pypy3"
 
 # command to install dependencies
 install:
